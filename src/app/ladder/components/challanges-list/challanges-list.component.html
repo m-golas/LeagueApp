@@ -1,0 +1,26 @@
+<mat-accordion class="example-headers-align" multi>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Oczekujące wyzwania </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <ng-container *ngIf="challanges$ | async as challanges; else noChallange">
+      <mat-list>
+        <ng-container *ngFor="let item of challanges" role="listitem">
+          <app-challange-card
+            [challange]="item"
+            (acceptChallange)="accept($event)"
+            (declineChallange)="decline($event)"
+          ></app-challange-card>
+        </ng-container>
+        <mat-list-item role="listitem">
+          <button mat-stroked-button color="priamry">
+            <span>Zobacz więcej</span>
+          </button>
+        </mat-list-item>
+      </mat-list>
+    </ng-container>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<ng-template #noChallange> <h2>Brak oczekujących wyzwań</h2> </ng-template>
