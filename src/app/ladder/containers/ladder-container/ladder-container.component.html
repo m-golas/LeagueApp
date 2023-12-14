@@ -1,0 +1,14 @@
+<mat-toolbar color="primary">
+  <section class="nav">
+    <span class="nav__name">Liga</span>
+
+    <a class="nav__logout" (click)="logout()">
+      <mat-icon>exit_to_app</mat-icon>
+      <span>Wyloguj się</span>
+    </a>
+  </section>
+</mat-toolbar>
+
+<section class="main">
+  <router-outlet></router-outlet>
+</section>

@@ -1,0 +1,28 @@
+.main {
+  max-width: 1200px;
+  display: block;
+  margin: 0px auto;
+  margin-top: 60px;
+  padding: 0 15px;
+}
+
+.nav {
+  width: 1200px;
+  margin: 0px auto;
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  
+  &__name {
+    text-align: left;
+  }
+
+  &__logout {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 14px;
+    font-weight: lighter;
+    cursor: pointer;
+  }
+}

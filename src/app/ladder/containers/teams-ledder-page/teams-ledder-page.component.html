@@ -1,0 +1,58 @@
+<div class="container">
+  <section [ngSwitch]="selectedSection">
+    <app-ladders-toggle
+      [selected]="selectedSection"
+      (selectionChange)="changeSelection($event)"
+    />
+    <div *ngSwitchCase="'teams'">
+      <ng-container *ngIf="teams$ | async as teams">
+        <app-teams-list
+          [teams]="teams"
+          [playerTeam]="playerTeam$ | async"
+          (challangeTeam)="challangeTeam($event)"
+        />
+      </ng-container>
+    </div>
+
+    <div *ngSwitchCase="'players'">
+      <ng-container *ngIf="players$ | async as players">
+        <app-players-list [players]="players" />
+      </ng-container>
+    </div>
+  </section>
+  <section>
+    <ng-container *ngIf="playerTeam$ | async as playerTeam; else noTeam">
+      <mat-card class="example-card">
+        <mat-card-header>
+          <mat-card-title>{{ currentUser?.name }}</mat-card-title>
+          <mat-card-subtitle>{{ playerTeam.name }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="details">
+            <p class="score">
+              <strong>Pozycja w lidze:</strong> {{ playerTeam.position }}
+            </p>
+            <p class="score">
+              <strong>Punkty:</strong> {{ playerTeam.points }}
+            </p>
+          </div>
+          <div class="accordions-holder">
+            <app-incoming-matches [matches]="[]" />
+            <app-challanges-list [challanges$]="challanges$" />
+            <app-team-members-list [members]="playerTeam.members" />
+          </div>
+
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
+  </section>
+</div>
+
+<ng-template #noTeam>
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>{{ currentUser?.name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content> Dołącz do zespołu </mat-card-content>
+  </mat-card></ng-template
+>
