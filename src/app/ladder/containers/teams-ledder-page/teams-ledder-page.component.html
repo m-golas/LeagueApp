@@ -21,12 +21,14 @@
     </div>
   </section>
   <section>
-    <ng-container *ngIf="playerTeam$ | async as playerTeam; else noTeam">
-      <mat-card class="example-card">
-        <mat-card-header>
-          <mat-card-title>{{ currentUser?.name }}</mat-card-title>
-          <mat-card-subtitle>{{ playerTeam.name }}</mat-card-subtitle>
-        </mat-card-header>
+    <mat-card class="example-card">
+      <mat-card-header>
+        <mat-card-title>{{ currentUser?.name }}</mat-card-title>
+        <mat-card-subtitle *ngIf="playerTeam$ | async as playerTeam">{{
+          playerTeam.name
+        }}</mat-card-subtitle>
+      </mat-card-header>
+      <ng-container *ngIf="playerTeam$ | async as playerTeam; else noTeam">
         <mat-card-content>
           <div class="details">
             <p class="score">
@@ -37,14 +39,36 @@
             </p>
           </div>
           <div class="accordions-holder">
-            <app-incoming-matches [matches]="[]" />
-            <app-challanges-list [challanges$]="challanges$" />
-            <app-team-members-list [members]="playerTeam.members" />
-          </div>
+            <app-incoming-matches
+              [matches]="challanges$ | async | challangeType : 'ACCEPTED'"
+              (showChallange)="showChallangeDialog($event)"
+            />
+            <app-team-members-list
+              [members]="playerTeam.members"
+              [isOwner]="playerTeam.isOwner"
+              (invite)="openInvitation(playerTeam.id)"
+            />
 
+            <ng-container *ngIf="playerTeam.isOwner">
+              <h3 class="title">Zarządzanie zespołem</h3>
+              <app-challanges-list
+                [challanges]="challanges$ | async | challangeType : 'PENDING'"
+                (acceptChallange)="acceptChalange($event)"
+                (declineChallange)="declineChalange($event)"
+                (showChallange)="showChallangeDialog($event)"
+              />
+              <app-matches-awaiting-scoring
+                [matches]="
+                  challanges$ | async | challangeType : 'AWAITING_SCORE'
+                "
+                (showChallange)="showChallangeDialog($event)"
+                (resolveChallange)="resolveChallange($event)"
+              />
+            </ng-container>
+          </div>
         </mat-card-content>
-      </mat-card>
-    </ng-container>
+      </ng-container>
+    </mat-card>
   </section>
 </div>
 

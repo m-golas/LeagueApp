@@ -3,6 +3,7 @@ import { Team } from '../_models/team';
 import { of } from 'rxjs';
 import { Challange } from '../_models/challange';
 import { MOCK_CHALLANGFES } from '../_mock/challanges';
+import { ChallangeRequest } from '../_models/challange-request';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +15,10 @@ export class ChallangeService {
     return of(MOCK_CHALLANGFES);
   }
 
-  challangeTeam(team: Team) {
-    return of(true);
+  challangeTeam(challange: ChallangeRequest) {
+    console.log('Challanged team', challange)
+
+    return of(false);
   }
 
   acceptChallange(id: Challange['id']) {

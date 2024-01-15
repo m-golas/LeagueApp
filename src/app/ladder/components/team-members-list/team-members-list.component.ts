@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Player } from 'src/app/core/_models/player';
 
 @Component({
@@ -9,4 +9,9 @@ import { Player } from 'src/app/core/_models/player';
 export class TeamMembersListComponent {
   @Input() members: Array<Player> = []
   @Input() isOwner: boolean = false;
+  @Output() invite = new EventEmitter()
+
+  openInvitation(): void {
+    this.invite.emit();
+  }
 }

@@ -1,14 +1,16 @@
-<mat-accordion class="example-headers-align" multi>
+<mat-accordion multi>
   <mat-expansion-panel>
     <mat-expansion-panel-header>
-      <mat-panel-title> Zbliżające się mecze </mat-panel-title>
+      <mat-panel-title>Mecze oczekujące na wynik </mat-panel-title>
     </mat-expansion-panel-header>
 
-    <mat-list role="list" *ngIf="matches; else noPending">
+    <mat-list *ngIf="matches; else noMatches">
       <app-challange-card
-        *ngFor="let item of matches  | slice : 0 : 3"
+        *ngFor="let item of matches | slice : 0 : 3"
         [challange]="item"
         [controls]="false"
+        [showResolve]="true"
+        (resolveChallange)="resolve($event)"
         (showChallange)="show($event)"
       />
 
@@ -21,4 +23,6 @@
   </mat-expansion-panel>
 </mat-accordion>
 
-<ng-template #noPending> <h2>Brak oczekujących wyzwań</h2> </ng-template>
+<ng-template #noMatches>
+  <h2>Brak oczekujących meczy do oceny</h2>
+</ng-template>

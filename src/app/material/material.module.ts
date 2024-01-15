@@ -9,7 +9,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 
 @NgModule({
   imports: [
@@ -23,7 +28,12 @@ import {MatMenuModule} from '@angular/material/menu';
     MatCardModule,
     MatIconModule,
     MatToolbarModule,
-    MatMenuModule
+    MatMenuModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSnackBarModule,
+    ClipboardModule
   ],
   exports: [
     MatTableModule,
@@ -36,7 +46,12 @@ import {MatMenuModule} from '@angular/material/menu';
     MatCardModule,
     MatIconModule,
     MatToolbarModule,
-    MatMenuModule
+    MatMenuModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSnackBarModule,
+    ClipboardModule
   ],
 })
 export class MaterialModule {}

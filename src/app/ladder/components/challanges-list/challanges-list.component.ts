@@ -8,10 +8,11 @@ import { Challange } from 'src/app/core/_models/challange';
   styleUrls: ['./challanges-list.component.scss']
 })
 export class ChallangesListComponent {
-  @Input() challanges$!: Observable<Array<Challange>>; 
+  @Input() challanges: Array<Challange> | null = []; 
 
   @Output() acceptChallange = new EventEmitter<Challange["id"]>();
   @Output() declineChallange = new EventEmitter<Challange["id"]>();
+  @Output() showChallange = new EventEmitter<Challange>();
 
   accept(id: Challange["id"]) {
     this.acceptChallange.emit(id);
@@ -19,5 +20,9 @@ export class ChallangesListComponent {
 
   decline(id: Challange["id"]) {
     this.declineChallange.emit(id);
+  }
+
+  show(challange: Challange) {
+    this.showChallange.emit(challange)
   }
 }
