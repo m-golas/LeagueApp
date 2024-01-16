@@ -12,6 +12,5 @@ export class LadderContainerComponent {
 
   logout(){
     this.auth.logout();
-    this.router.navigate(['/login'])
   }
 }
