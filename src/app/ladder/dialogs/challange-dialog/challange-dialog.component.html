@@ -1,0 +1,38 @@
+<h1 mat-dialog-title>Wyzwij zespół</h1>
+<div mat-dialog-content>
+  <form class="form" [formGroup]="challangeForm">
+    <p>Czy na pewno chcesz wyzwać zespół <strong>{{ data.team.name }}</strong>?</p>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Wybierz date</mat-label>
+      <input
+        matInput
+        [min]="minDate"
+        [matDatepicker]="picker"
+        formControlName="date"
+      />
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Lokalizacja oraz komentarz</mat-label>
+      <textarea matInput formControlName="comment"></textarea>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Odrzuć</button>
+  <button
+    mat-button
+    mat-dialog-close
+    [mat-dialog-close]="getData()"
+    [disabled]="!this.challangeForm.valid"
+  >
+    Wyzwij
+  </button>
+</div>

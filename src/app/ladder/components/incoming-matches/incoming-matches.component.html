@@ -1,0 +1,24 @@
+<mat-accordion class="example-headers-align" multi>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Zbliżające się mecze </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <mat-list role="list" *ngIf="matches; else noPending">
+      <app-challange-card
+        *ngFor="let item of matches  | slice : 0 : 3"
+        [challange]="item"
+        [controls]="false"
+        (showChallange)="show($event)"
+      />
+
+      <mat-list-item role="listitem" *ngIf="matches.length > 3">
+        <button mat-stroked-button color="priamry">
+          <span>Zobacz więcej</span>
+        </button>
+      </mat-list-item>
+    </mat-list>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<ng-template #noPending> <h2>Brak oczekujących wyzwań</h2> </ng-template>

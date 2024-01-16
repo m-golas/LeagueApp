@@ -1,0 +1,46 @@
+:host {
+    display: flex;
+    justify-content: center;
+    margin: 200px 0;
+}
+
+.login {
+    &__title {
+        margin-top: 40px;
+    }
+}
+
+.mat-form-field {
+    width: 100%;
+    min-width: 320px !important;
+}
+
+mat-card-title,
+mat-card-content {
+    display: flex;
+    justify-content: center;
+}
+
+mat-card-title {
+    margin-bottom: 20px;
+}
+
+.loginButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.error {
+    color: red;
+}
+
+.register-info {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.register-info a{
+    font-size: 12px;
+    color: #838383;
+}

@@ -1,0 +1,82 @@
+<div class="container">
+  <section [ngSwitch]="selectedSection">
+    <app-ladders-toggle
+      [selected]="selectedSection"
+      (selectionChange)="changeSelection($event)"
+    />
+    <div *ngSwitchCase="'teams'">
+      <ng-container *ngIf="teams$ | async as teams">
+        <app-teams-list
+          [teams]="teams"
+          [playerTeam]="playerTeam$ | async"
+          (challangeTeam)="challangeTeam($event)"
+        />
+      </ng-container>
+    </div>
+
+    <div *ngSwitchCase="'players'">
+      <ng-container *ngIf="players$ | async as players">
+        <app-players-list [players]="players" />
+      </ng-container>
+    </div>
+  </section>
+  <section>
+    <mat-card class="example-card">
+      <mat-card-header>
+        <mat-card-title>{{ currentUser?.name }}</mat-card-title>
+        <mat-card-subtitle *ngIf="playerTeam$ | async as playerTeam">{{
+          playerTeam.name
+        }}</mat-card-subtitle>
+      </mat-card-header>
+      <ng-container *ngIf="playerTeam$ | async as playerTeam; else noTeam">
+        <mat-card-content>
+          <div class="details">
+            <p class="score">
+              <strong>Pozycja w lidze:</strong> {{ playerTeam.position }}
+            </p>
+            <p class="score">
+              <strong>Punkty:</strong> {{ playerTeam.points }}
+            </p>
+          </div>
+          <div class="accordions-holder">
+            <app-incoming-matches
+              [matches]="challanges$ | async | challangeType : 'ACCEPTED'"
+              (showChallange)="showChallangeDialog($event)"
+            />
+            <app-team-members-list
+              [members]="playerTeam.members"
+              [isOwner]="playerTeam.isOwner"
+              (invite)="openInvitation(playerTeam.id)"
+            />
+
+            <ng-container *ngIf="playerTeam.isOwner">
+              <h3 class="title">Zarządzanie zespołem</h3>
+              <app-challanges-list
+                [challanges]="challanges$ | async | challangeType : 'PENDING'"
+                (acceptChallange)="acceptChalange($event)"
+                (declineChallange)="declineChalange($event)"
+                (showChallange)="showChallangeDialog($event)"
+              />
+              <app-matches-awaiting-scoring
+                [matches]="
+                  challanges$ | async | challangeType : 'AWAITING_SCORE'
+                "
+                (showChallange)="showChallangeDialog($event)"
+                (resolveChallange)="resolveChallange($event)"
+              />
+            </ng-container>
+          </div>
+        </mat-card-content>
+      </ng-container>
+    </mat-card>
+  </section>
+</div>
+
+<ng-template #noTeam>
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>{{ currentUser?.name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content> Dołącz do zespołu </mat-card-content>
+  </mat-card></ng-template
+>

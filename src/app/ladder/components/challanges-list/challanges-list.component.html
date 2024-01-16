@@ -1,0 +1,25 @@
+<mat-accordion multi>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Oczekujące wyzwania </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <mat-list *ngIf="challanges; else noChallange">
+      <app-challange-card
+        *ngFor="let item of challanges | slice : 0 : 3"
+        [challange]="item"
+        (acceptChallange)="accept($event)"
+        (declineChallange)="decline($event)"
+        (showChallange)="show($event)"
+      />
+
+      <mat-list-item role="listitem" *ngIf="challanges.length > 3">
+        <button mat-stroked-button color="priamry">
+          <span>Zobacz więcej</span>
+        </button>
+      </mat-list-item>
+    </mat-list>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<ng-template #noChallange> <h2>Brak oczekujących wyzwań</h2> </ng-template>

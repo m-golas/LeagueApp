@@ -1,0 +1,11 @@
+
+<h1 mat-dialog-title>Wyzwanie</h1>
+<div mat-dialog-content class="holder">
+    <p><strong>Zespół wyzywający: {{data.challanger.name}}</strong></p>
+    <p>Zespół wyzwany: {{data.challangedTeam.name}}</p>
+    <p>Data: {{data.time | date : "dd.MM.yyyy HH.mm" }}</p>
+    <p *ngIf="data.comment">Komentarz: {{data.comment}}</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Zamknij</button>
+</div>

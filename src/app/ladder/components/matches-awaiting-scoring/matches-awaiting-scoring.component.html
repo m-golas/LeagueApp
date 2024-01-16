@@ -1,0 +1,28 @@
+<mat-accordion multi>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>Mecze oczekujące na wynik </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <mat-list *ngIf="matches; else noMatches">
+      <app-challange-card
+        *ngFor="let item of matches | slice : 0 : 3"
+        [challange]="item"
+        [controls]="false"
+        [showResolve]="true"
+        (resolveChallange)="resolve($event)"
+        (showChallange)="show($event)"
+      />
+
+      <mat-list-item role="listitem" *ngIf="matches.length > 3">
+        <button mat-stroked-button color="priamry">
+          <span>Zobacz więcej</span>
+        </button>
+      </mat-list-item>
+    </mat-list>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<ng-template #noMatches>
+  <h2>Brak oczekujących meczy do oceny</h2>
+</ng-template>
