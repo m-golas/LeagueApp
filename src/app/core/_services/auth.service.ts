@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, map, of } from 'rxjs';
 import { User } from '../_models/user';
 import { Credentials } from '../_models/credentials';
 import { RegisterRequest } from '../_models/register-request';
+import { KeycloakService } from 'keycloak-angular';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,9 @@ import { RegisterRequest } from '../_models/register-request';
 export class AuthService {
   private currentUserSubject: BehaviorSubject<User | null>;
 
-  constructor() {
+  constructor(
+    protected readonly keycloak: KeycloakService
+  ) {
     this.currentUserSubject = new BehaviorSubject(this.getUserFromLocal());
   }
 
@@ -47,17 +50,8 @@ export class AuthService {
     );
   }
 
-  register(data: RegisterRequest): Observable<User> {
-    //return this.http.post<User>(`${environment.baseUrl}/auth/register`, data)
-    return of({
-      id: 'Team1',
-      name: 'TEST ACCOUNT',
-      team: undefined,
-      token: 'TOKEN',
-    });
-  }
-
-  logout() {
+  logout = async () => {
+    await this.keycloak.logout();
     this.currentUserSubject.next(null);
   }
 
@@ -65,12 +59,4 @@ export class AuthService {
     const user = localStorage.getItem('currentUser');
     return user ? JSON.parse(user) : null;
   }
-
-  // hasRoles(permissions: string[]): boolean {
-  //   if(this.currentUser){
-  //     return permissions.some(perm => this.currentUser!.roles.includes(perm))
-  //   }
-
-  //   return false;
-  // }
 }
