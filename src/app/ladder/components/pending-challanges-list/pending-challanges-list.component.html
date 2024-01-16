@@ -1,0 +1,51 @@
+<ng-container *ngIf="pendingChallanges">
+    <h2 class="list-title">Oczekujące na przyjęcie</h2>
+  
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nazwa</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.challanger.name | titlecase }}
+        </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Data</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.time | date : "dd.MM.yyyy HH.mm" | titlecase }}
+        </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="action">
+        <th class="action" mat-header-cell *matHeaderCellDef>Akcja</th>
+        <td mat-cell *matCellDef="let element">
+          <button
+            class="menu__button"
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            [matMenuTriggerData]="{ element }"
+          >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[10, 25, 50]"/>
+  </ng-container>
+  <mat-menu #menu="matMenu">
+    <ng-template matMenuContent let-element="element">
+      <button mat-menu-item (click)="show(element)">
+        <span>Podgląd</span>
+      </button>
+      <button mat-menu-item (click)="accept(element.id)">
+        <span>Akceptuj</span>
+      </button>
+      <button mat-menu-item (click)="decline(element.id)">
+        <span>Odrzuć</span>
+      </button>
+    </ng-template>
+  </mat-menu>
+  

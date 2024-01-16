@@ -3,8 +3,6 @@ import { BehaviorSubject, Observable, map, mergeMap, of, tap } from 'rxjs';
 import { TeamsService } from './team.service';
 import { AuthService } from './auth.service';
 import { TeamWithMembers } from '../_models/team-with-members';
-import { Team } from '../_models/team';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -42,7 +40,7 @@ export class PlayerTeamService {
   loadTeam(): Observable<TeamWithMembers | null> {
     const user = this.auth.currentUser;
 
-    console.log('Current user', user);
+    //return of(null)
 
     return of(user).pipe(
       mergeMap((user) => {
@@ -54,6 +52,7 @@ export class PlayerTeamService {
                 ...team,
                 members,
                 isOwner: team.ownerID === this.auth.currentUser?.id,
+                //isOwner: false
               };
             })
           );

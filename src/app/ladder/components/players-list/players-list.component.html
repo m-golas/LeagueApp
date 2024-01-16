@@ -1,3 +1,11 @@
+<h2 class="list-title">Lista graczy</h2>
+
+
+<mat-form-field>
+  <mat-label>Wyszukaj gracza</mat-label>
+  <input matInput (keyup)="applyFilter($event)" #input />
+</mat-form-field>
+
 <table mat-table [dataSource]="players" class="mat-elevation-z8">
 
     <ng-container matColumnDef="id">
@@ -19,3 +27,5 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+
+<mat-paginator [pageSizeOptions]="[10, 25, 50]"> </mat-paginator>

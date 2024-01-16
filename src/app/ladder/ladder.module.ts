@@ -18,6 +18,11 @@ import { ChallangeTypePipe } from './pipes/challange-type.pipe';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatchesAwaitingScoringComponent } from './components/matches-awaiting-scoring/matches-awaiting-scoring.component';
 import { ChallaneDetailsDialogComponent } from './dialogs/challane-details-dialog/challane-details-dialog.component';
+import { IncomingMatchesListComponent } from './components/incoming-matches-list/incoming-matches-list.component';
+import { PendingChallangesListComponent } from './components/pending-challanges-list/pending-challanges-list.component';
+import { AwaitingScoringChallangesListComponent } from './components/awaiting-scoring-challanges-list/awaiting-scoring-challanges-list.component';
+import { MatchesHistoryListComponent } from './components/matches-history-list/matches-history-list.component';
+import { JoinTeamDialogComponent } from './dialogs/join-team-dialog/join-team-dialog.component';
 
 
 @NgModule({
@@ -35,7 +40,12 @@ import { ChallaneDetailsDialogComponent } from './dialogs/challane-details-dialo
     InvitationDialogComponent,
     ChallangeTypePipe,
     MatchesAwaitingScoringComponent,
-    ChallaneDetailsDialogComponent
+    ChallaneDetailsDialogComponent,
+    IncomingMatchesListComponent,
+    PendingChallangesListComponent,
+    AwaitingScoringChallangesListComponent,
+    MatchesHistoryListComponent,
+    JoinTeamDialogComponent
   ],
   exports: [
     TeamsLedderPageComponent

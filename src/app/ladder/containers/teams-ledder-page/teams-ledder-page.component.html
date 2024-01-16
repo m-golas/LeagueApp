@@ -2,8 +2,11 @@
   <section [ngSwitch]="selectedSection">
     <app-ladders-toggle
       [selected]="selectedSection"
+      [isOwner]="isOwner$ | async"
+      [hasTeam]="hasTeam$ | async"
       (selectionChange)="changeSelection($event)"
     />
+
     <div *ngSwitchCase="'teams'">
       <ng-container *ngIf="teams$ | async as teams">
         <app-teams-list
@@ -18,6 +21,31 @@
       <ng-container *ngIf="players$ | async as players">
         <app-players-list [players]="players" />
       </ng-container>
+    </div>
+
+    <div *ngSwitchCase="'matches'">
+      <app-incoming-matches-list
+        [incomingMatches]="challanges$ | async | challangeType : 'ACCEPTED'"
+        (showChallange)="showChallangeDialog($event)"
+      />
+      <app-matches-history-list
+        [matches]="challanges$ | async | challangeType : 'RESOLVED'"
+        (showChallange)="showChallangeDialog($event)"
+      />
+    </div>
+
+    <div *ngSwitchCase="'challanges'">
+      <app-pending-challanges-list
+        [pendingChallanges]="challanges$ | async | challangeType : 'PENDING'"
+        (acceptChallange)="acceptChalange($event)"
+        (declineChallange)="declineChalange($event)"
+        (showChallange)="showChallangeDialog($event)"
+      />
+      <app-awaiting-scoring-challanges-list
+        [challanges]="challanges$ | async | challangeType : 'AWAITING_SCORE'"
+        (showChallange)="showChallangeDialog($event)"
+        (resolveChallange)="resolveChallange($event)"
+      />
     </div>
   </section>
   <section>
@@ -38,32 +66,36 @@
               <strong>Punkty:</strong> {{ playerTeam.points }}
             </p>
           </div>
+
           <div class="accordions-holder">
-            <app-incoming-matches
-              [matches]="challanges$ | async | challangeType : 'ACCEPTED'"
-              (showChallange)="showChallangeDialog($event)"
-            />
             <app-team-members-list
               [members]="playerTeam.members"
               [isOwner]="playerTeam.isOwner"
               (invite)="openInvitation(playerTeam.id)"
             />
 
-            <ng-container *ngIf="playerTeam.isOwner">
-              <h3 class="title">Zarządzanie zespołem</h3>
-              <app-challanges-list
-                [challanges]="challanges$ | async | challangeType : 'PENDING'"
-                (acceptChallange)="acceptChalange($event)"
-                (declineChallange)="declineChalange($event)"
+            <ng-container *ngIf="false">
+              <app-incoming-matches
+                [matches]="challanges$ | async | challangeType : 'ACCEPTED'"
                 (showChallange)="showChallangeDialog($event)"
               />
-              <app-matches-awaiting-scoring
-                [matches]="
-                  challanges$ | async | challangeType : 'AWAITING_SCORE'
-                "
-                (showChallange)="showChallangeDialog($event)"
-                (resolveChallange)="resolveChallange($event)"
-              />
+
+              <ng-container *ngIf="playerTeam.isOwner">
+                <h3 class="title">Zarządzanie zespołem</h3>
+                <app-challanges-list
+                  [challanges]="challanges$ | async | challangeType : 'PENDING'"
+                  (acceptChallange)="acceptChalange($event)"
+                  (declineChallange)="declineChalange($event)"
+                  (showChallange)="showChallangeDialog($event)"
+                />
+                <app-matches-awaiting-scoring
+                  [matches]="
+                    challanges$ | async | challangeType : 'AWAITING_SCORE'
+                  "
+                  (showChallange)="showChallangeDialog($event)"
+                  (resolveChallange)="resolveChallange($event)"
+                />
+              </ng-container>
             </ng-container>
           </div>
         </mat-card-content>
@@ -73,10 +105,14 @@
 </div>
 
 <ng-template #noTeam>
-  <mat-card class="example-card">
-    <mat-card-header>
-      <mat-card-title>{{ currentUser?.name }}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content> Dołącz do zespołu </mat-card-content>
-  </mat-card></ng-template
->
+  <div>
+    <button
+      mat-raised-button
+      color="primary"
+      class="join-team"
+      (click)="openJoinTeam()"
+    >
+      Dołącz do zespołu
+    </button>
+  </div>
+</ng-template>

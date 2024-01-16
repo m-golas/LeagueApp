@@ -53,6 +53,6 @@ export const MOCK_CHALLANGFES: Array<Challange> = [
     },
     challanger: MOCK_TEAMS[3],
     challangedTeam: MOCK_TEAMS[0],
-    time: 'Thu Dec 11 2023 17:00:00 GMT+0100',
+    time: 'Thu Dec 12 2023 19:00:00 GMT+0100',
   },
 ];

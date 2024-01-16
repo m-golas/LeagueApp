@@ -1,11 +1,25 @@
 <h1 mat-dialog-title>Zaproszenie</h1>
 <div mat-dialog-content class="holder">
-    <mat-form-field class="full-width">
-      <mat-label>Kod zaproszenia</mat-label>
-      <input matInput disabled [value]="data.code"/>
-    </mat-form-field>
-    <button class="button-copy" mat-raised-button color="primary" [cdkCopyToClipboard]="data.code">Skopiuj</button>
+  <mat-form-field class="full-width">
+    <mat-label>Kod zaproszenia</mat-label>
+    <input matInput disabled [value]="data.code" />
+  </mat-form-field>
+  <button
+    class="button-copy"
+    mat-raised-button
+    color="primary"
+    [cdkCopyToClipboard]="data.code"
+  >
+    Skopiuj
+  </button>
 </div>
 <div mat-dialog-actions>
-  <button mat-button mat-dialog-close>Zamknij</button>
+  <button
+    class="action-button"
+    mat-button
+    color="primary"
+    mat-dialog-close
+  >
+    Zamknij
+  </button>
 </div>
