@@ -15,6 +15,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {ClipboardModule} from '@angular/cdk/clipboard';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSnackBarModule,
-    ClipboardModule
+    ClipboardModule,
+    MatPaginatorModule
   ],
   exports: [
     MatTableModule,
@@ -51,7 +53,8 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSnackBarModule,
-    ClipboardModule
+    ClipboardModule,
+    MatPaginatorModule
   ],
 })
 export class MaterialModule {}

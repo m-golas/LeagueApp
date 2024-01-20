@@ -7,7 +7,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class LaddersToggleComponent {
   @Input() selected = "teams"
-
+  @Input() isOwner: boolean | null | undefined = false;
+  @Input() hasTeam: boolean | null | undefined = false;
+ 
   @Output() selectionChange = new EventEmitter<string>();
 
   changeSelection(value: string): void {

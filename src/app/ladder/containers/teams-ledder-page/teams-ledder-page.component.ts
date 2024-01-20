@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { BehaviorSubject, filter, map } from 'rxjs';
+import { BehaviorSubject, Observable, filter, map, tap } from 'rxjs';
 import { Challange } from 'src/app/core/_models/challange';
 import { Player } from 'src/app/core/_models/player';
 import { Team } from 'src/app/core/_models/team';
@@ -14,6 +14,8 @@ import { ChallangeDialogComponent } from '../../dialogs/challange-dialog/challan
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationDialogComponent } from '../../dialogs/invitation-dialog/invitation-dialog.component';
 import { ChallaneDetailsDialogComponent } from '../../dialogs/challane-details-dialog/challane-details-dialog.component';
+import { SportContextService } from 'src/app/core/_services/sport-context.service';
+import { JoinTeamDialogComponent } from '../../dialogs/join-team-dialog/join-team-dialog.component';
 
 @Component({
   selector: 'app-teams-ledder',
@@ -25,6 +27,10 @@ export class TeamsLedderPageComponent {
   players$: BehaviorSubject<Array<Player>>;
   challanges$: BehaviorSubject<Array<Challange>>;
   playerTeam$: BehaviorSubject<TeamWithMembers | null>;
+  isOwner$: Observable<boolean | undefined>;
+  hasTeam$: Observable<boolean | undefined>;
+
+  contextSubscription$;
 
   selectedSection = 'teams';
   currentUser = this.auth.currentUser;
@@ -36,15 +42,41 @@ export class TeamsLedderPageComponent {
     private playerTeamService: PlayerTeamService,
     private auth: AuthService,
     public dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private sport: SportContextService
   ) {
     this.teams$ = new BehaviorSubject<Array<Team>>([]);
     this.players$ = new BehaviorSubject<Array<Player>>([]);
     this.challanges$ = new BehaviorSubject<Array<Challange>>([]);
     this.playerTeam$ = new BehaviorSubject(null as TeamWithMembers | null);
+
+    this.contextSubscription$ = this.sport
+      .getSportContextObservable()
+      .pipe(
+        tap((value) => {
+          console.log(value);
+          this.fetchData();
+        })
+      )
+      .subscribe();
+
+    this.isOwner$ = this.playerTeam$
+      .asObservable()
+      .pipe(map((team) => team?.isOwner));
+
+    this.hasTeam$ = this.playerTeam$
+    .asObservable().pipe(map(team => !!team))
   }
 
   ngOnInit() {
+    this.fetchData();
+  }
+
+  ngOnDestroy() {
+    this.contextSubscription$.unsubscribe();
+  }
+
+  fetchData() {
     this.getAllTeams();
     this.getAllPlayers();
     this.getPlayerTeam();
@@ -68,8 +100,6 @@ export class TeamsLedderPageComponent {
         )
       )
       .subscribe((challanges) => {
-        console.log(challanges);
-
         this.challanges$.next(challanges);
       });
   }
@@ -98,33 +128,37 @@ export class TeamsLedderPageComponent {
     });
   }
 
+  openJoinTeam(): void {
+    const dialogRef = this.dialog.open(JoinTeamDialogComponent, {
+      data: "Join",
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('Result', result)
+    })
+  }
+
   acceptChalange(id: Challange['id']) {
-    this.challangeService
-      .acceptChallange(id)
-      .subscribe((res) => {
-        this.openResultSnack(
-          res,
-          'Pomyślnie akceptowano wyzwanie',
-          'Nie udało się akceptować wyzwania. Spróbuj ponownie później!'
-        )
-        this.getAllChallanges()
-      }
+    this.challangeService.acceptChallange(id).subscribe((res) => {
+      this.openResultSnack(
+        res,
+        'Pomyślnie akceptowano wyzwanie',
+        'Nie udało się akceptować wyzwania. Spróbuj ponownie później!'
       );
+      this.getAllChallanges();
+    });
   }
 
   declineChalange(id: Challange['id']) {
-    this.challangeService
-      .declineChallange(id)
-      .subscribe((res) => {
-        this.openResultSnack(
-          res,
-          'Pomyślnie odrzucono wyzwanie',
-          'Nie udało się odrzucić wyzwania. Spróbuj ponownie później!'
-        )
-
-        this.getAllChallanges()
-      }
+    this.challangeService.declineChallange(id).subscribe((res) => {
+      this.openResultSnack(
+        res,
+        'Pomyślnie odrzucono wyzwanie',
+        'Nie udało się odrzucić wyzwania. Spróbuj ponownie później!'
       );
+
+      this.getAllChallanges();
+    });
   }
 
   challangeTeam(team: Team): void {
@@ -146,7 +180,7 @@ export class TeamsLedderPageComponent {
   }
 
   showChallangeDialog(challange: Challange): void {
-    console.log(challange)
+    console.log(challange);
 
     this.dialog.open(ChallaneDetailsDialogComponent, {
       data: { ...challange },
@@ -165,6 +199,6 @@ export class TeamsLedderPageComponent {
   }
 
   resolveChallange(challange: Challange) {
-    console.log('Challange', challange)
+    console.log('Challange', challange);
   }
 }
