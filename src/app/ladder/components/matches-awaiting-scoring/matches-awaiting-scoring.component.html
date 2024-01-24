@@ -5,14 +5,16 @@
     </mat-expansion-panel-header>
 
     <mat-list *ngIf="matches; else noMatches">
-      <app-challange-card
-        *ngFor="let item of matches | slice : 0 : 3"
-        [challange]="item"
-        [controls]="false"
-        [showResolve]="true"
-        (resolveChallange)="resolve($event)"
-        (showChallange)="show($event)"
-      />
+      <ng-container *ngIf="matches$">
+        <app-challange-card
+          *ngFor="let item of matches$ | slice : 0 : 3"
+          [challange]="item"
+          [controls]="false"
+          [showResolve]="true"
+          (resolveChallange)="resolve($event)"
+          (showChallange)="show($event)"
+        />
+      </ng-container>
 
       <mat-list-item role="listitem" *ngIf="matches.length > 3">
         <button mat-stroked-button color="priamry">

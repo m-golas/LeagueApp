@@ -6,7 +6,7 @@
 
     <mat-list role="list" *ngIf="matches; else noPending">
       <app-challange-card
-        *ngFor="let item of matches  | slice : 0 : 3"
+        *ngFor="let item of matches$  | slice : 0 : 3"
         [challange]="item"
         [controls]="false"
         (showChallange)="show($event)"

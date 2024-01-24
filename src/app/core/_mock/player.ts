@@ -1,20 +1,22 @@
 import { Player } from "../_models/player";
-import { MOCK_TEAMS } from "./team";
 
 export const MOCK_PLAYERS: Array<Player> = [
-    {
-      id: 'TEST_PLAYER_1',
-      name: 'Player 1',
-      team: MOCK_TEAMS[0],
-    },
-    {
-      id: 'TEST_PLAYER_2',
-      name: 'Player 2',
-      team: MOCK_TEAMS[1],
-    },
-    {
-      id: 'TEST_PLAYER_3',
-      name: 'Player 3',
-      team: MOCK_TEAMS[3],
-    },
+  {
+    id: 1,
+    fullName: 'Player 1',
+    username: 'Player 1',
+    email: 'Player 1',
+  },
+  {
+    id: 2,
+    fullName: 'Player 2',
+    username: 'Player 2',
+    email: 'Player 2',
+  },
+  {
+    id: 3,
+    fullName: 'Player 3',
+    username: 'Player 3',
+    email: 'Player 3',
+  },
   ];

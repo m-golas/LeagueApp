@@ -1,18 +1,18 @@
-<ng-container *ngIf="challanges">
-  <h2 class="list-title">Oczekujące na wynik</h2>
+<ng-container *ngIf="dataSource">
+  <h2 class="list-title">Aktywne mecze</h2>
 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Nazwa</th>
       <td mat-cell *matCellDef="let element">
-        {{ element.challanger.name | titlecase }}
+        {{ element.challenged.name | titlecase }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="date">
       <th mat-header-cell *matHeaderCellDef>Data</th>
       <td mat-cell *matCellDef="let element">
-        {{ element.time | date : "dd.MM.yyyy HH.mm" | titlecase }}
+        {{ element.matchTime | date : "dd.MM.yyyy HH.mm" | titlecase }}
       </td>
     </ng-container>
 
@@ -34,15 +34,19 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
 
-  <mat-paginator [pageSizeOptions]="[10, 25, 50]"/>
+  <mat-paginator [pageSizeOptions]="[10, 25, 50]"   [pageSize]="10"
+  [length]="totalElements"
+  (page)="getPage($event)"/>
 </ng-container>
 <mat-menu #menu="matMenu">
   <ng-template matMenuContent let-element="element">
     <button mat-menu-item (click)="show(element)">
       <span>Podgląd</span>
     </button>
-    <button mat-menu-item (click)="resolve(element)">
-      <span>Wprowadź wynik</span>
-    </button>
+    <ng-container *ngIf=" isOwner && tookPlace(element)">
+      <button mat-menu-item (click)="resolve(element)">
+        <span>Wprowadź wynik</span>
+      </button>
+    </ng-container>
   </ng-template>
 </mat-menu>

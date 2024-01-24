@@ -21,3 +21,19 @@
 .join-team {
     margin: 16px;
 }
+
+.no-team-buttons {
+    margin-top: 32px;
+    margin-bottom: 32px;
+    width: 300px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+
+    .mdc-button{
+        width: 200px;
+        margin: 8px
+    }
+}
+

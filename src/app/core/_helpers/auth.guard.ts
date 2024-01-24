@@ -1,3 +1,4 @@
+import { Token } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
@@ -12,6 +13,8 @@ export class AuthGuard extends KeycloakAuthGuard {
     protected readonly keycloak: KeycloakService
   ) {
     super(router, keycloak);
+
+    keycloak.getToken().then(token => console.log('Token', token))
   }
   
   async isAccessAllowed(

@@ -1,7 +1,16 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Challange } from 'src/app/core/_models/challange';
+import { Subscription, first, tap } from 'rxjs';
+import { Challange, ChallangeFull } from 'src/app/core/_models/challange';
+import { ChallangeService } from 'src/app/core/_services/challange.service';
+import { SportContextService } from 'src/app/core/_services/sport-context.service';
 
 @Component({
   selector: 'app-incoming-matches-list',
@@ -12,22 +21,59 @@ export class IncomingMatchesListComponent {
   @Input() incomingMatches: Array<Challange> | null = [];
   @Output() showChallange = new EventEmitter<Challange>();
 
-  dataSource: MatTableDataSource<Challange>;
+  totalElements: number = 0;
+  displayedColumns: Array<String> = ['name', 'date', 'action'];
+
+  subs: Subscription;
+  dataSource: MatTableDataSource<ChallangeFull>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor() {
-    this.dataSource = new MatTableDataSource(this.incomingMatches || undefined);
+  constructor(
+    private context: SportContextService,
+    private challange: ChallangeService
+  ) {
+    this.dataSource = new MatTableDataSource([] as ChallangeFull[]);
+    this.subs = this.context
+      .getSportContextObservable()
+      .pipe(
+        tap((_) => {
+          console.log('Reaload')
+          this.getActiveMatches({ page: 0, size: 10 });
+          if (this.paginator) this.paginator.pageIndex = 0;
+        })
+      )
+      .subscribe();
   }
 
-  ngOnChanges() {
-    this.dataSource = new MatTableDataSource(this.incomingMatches || undefined);
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+  private getActiveMatches(request: any) {
+    this.challange
+      .getChallanges('IN_PROGRESS', request['page'], request['size'])
+      .pipe(first())
+      .subscribe(
+        (data) => {
+          if (data) {
+            this.totalElements = data['totalElements'];
+            this.dataSource = new MatTableDataSource(data['content']);
+          console.log('Data', data['content'])
+
+          }
+        },
+        (error) => {
+          console.log(error.error.message);
+        }
+      );
   }
 
-  displayedColumns: Array<String> = ['name', 'date', 'action'];
+  getPage(event: PageEvent) {
+    this.getActiveMatches({
+      page: event.pageIndex,
+      size: event.pageSize,
+    });
+  }
 
   show(challange: Challange) {
     this.showChallange.emit(challange);

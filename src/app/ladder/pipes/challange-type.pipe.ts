@@ -7,8 +7,8 @@ import { Challange, ChallangeTypes } from 'src/app/core/_models/challange';
 })
 export class ChallangeTypePipe implements PipeTransform {
 
-  transform(values: Challange[] | null, type: Challange["type"]): Challange[] | null {
-    return values ? values.filter((value) => value.type === type) : null;
+  transform(values: Challange[] | null, type: Challange["status"]): Challange[] | null {
+    return values ? values.filter((value) => value.status === type) : null;
   }
 
 }

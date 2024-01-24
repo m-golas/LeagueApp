@@ -19,8 +19,17 @@
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
+    <mat-form-field>
+      <input matInput type="time" class="bg-none" formControlName="time" placeholder="Time">
+    </mat-form-field>
+
     <mat-form-field class="example-full-width">
-      <mat-label>Lokalizacja oraz komentarz</mat-label>
+      <mat-label>Lokalizacja</mat-label>
+      <textarea matInput formControlName="location"></textarea>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Komentarz</mat-label>
       <textarea matInput formControlName="comment"></textarea>
     </mat-form-field>
   </form>

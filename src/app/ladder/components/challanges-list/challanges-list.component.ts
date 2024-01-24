@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Challange } from 'src/app/core/_models/challange';
+import { Challange, ChallangeFull } from 'src/app/core/_models/challange';
+import { ChallangeService } from 'src/app/core/_services/challange.service';
 
 @Component({
   selector: 'app-challanges-list',
@@ -12,7 +13,14 @@ export class ChallangesListComponent {
 
   @Output() acceptChallange = new EventEmitter<Challange["id"]>();
   @Output() declineChallange = new EventEmitter<Challange["id"]>();
-  @Output() showChallange = new EventEmitter<Challange>();
+  @Output() showChallange = new EventEmitter<ChallangeFull>();
+
+  constructor(private challange: ChallangeService){}
+
+  matches$ = this.challanges?.map(match => {
+    return this.challange.getChallange(match.id)
+  })
+
 
   accept(id: Challange["id"]) {
     this.acceptChallange.emit(id);
@@ -22,7 +30,7 @@ export class ChallangesListComponent {
     this.declineChallange.emit(id);
   }
 
-  show(challange: Challange) {
+  show(challange: ChallangeFull) {
     this.showChallange.emit(challange)
   }
 }

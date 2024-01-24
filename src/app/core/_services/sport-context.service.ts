@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-
-export type SportType = 'football' | 'voleyball' | 'basketball';
+import { SportType } from '../_models/sport-type';
 
 @Injectable({
   providedIn: 'root',
@@ -10,13 +9,17 @@ export class SportContextService {
   private currentSportContext: BehaviorSubject<SportType>;
 
   sportName: Record<SportType, string> = {
-    football: 'Piłka nożna',
-    basketball: 'Koszykówka',
-    voleyball: 'Siatkówka',
+    FOOTBALL: 'Piłka nożna',
+    BASKETBALL: 'Koszykówka',
+    VOLLEYBALL: 'Siatkówka',
   };
 
   constructor() {
-    this.currentSportContext = new BehaviorSubject<SportType>('football');
+    this.currentSportContext = new BehaviorSubject<SportType>('FOOTBALL');
+  }
+
+  public reload() {
+    this.currentSportContext.next(this.currentSportContext.value)
   }
 
   public getSportContextObservable() {
