@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Challange } from 'src/app/core/_models/challange';
+import { Challange, ChallangeFull } from 'src/app/core/_models/challange';
+import { ChallangeService } from 'src/app/core/_services/challange.service';
 
 @Component({
   selector: 'app-incoming-matches',
@@ -8,9 +9,15 @@ import { Challange } from 'src/app/core/_models/challange';
 })
 export class IncomingMatchesComponent {
   @Input() matches: Array<Challange> | null = []
-  @Output() showChallange = new EventEmitter<Challange>()
+  @Output() showChallange = new EventEmitter<ChallangeFull>()
 
-  show(challange: Challange) {
+  constructor(private challange: ChallangeService){}
+
+  matches$ = this.matches?.map(match => {
+    return this.challange.getChallange(match.id)
+  })
+
+  show(challange: ChallangeFull) {
     this.showChallange.emit(challange)
   }
 }

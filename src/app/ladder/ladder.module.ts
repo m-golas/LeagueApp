@@ -23,6 +23,9 @@ import { PendingChallangesListComponent } from './components/pending-challanges-
 import { AwaitingScoringChallangesListComponent } from './components/awaiting-scoring-challanges-list/awaiting-scoring-challanges-list.component';
 import { MatchesHistoryListComponent } from './components/matches-history-list/matches-history-list.component';
 import { JoinTeamDialogComponent } from './dialogs/join-team-dialog/join-team-dialog.component';
+import { TeamDialogComponent } from './dialogs/team-dialog/team-dialog.component';
+import { CreateTeamDialogComponent } from './dialogs/create-team-dialog/create-team-dialog.component';
+import { ResolveChallangeDialogComponent } from './dialogs/resolve-challange-dialog/resolve-challange-dialog.component';
 
 
 @NgModule({
@@ -45,7 +48,10 @@ import { JoinTeamDialogComponent } from './dialogs/join-team-dialog/join-team-di
     PendingChallangesListComponent,
     AwaitingScoringChallangesListComponent,
     MatchesHistoryListComponent,
-    JoinTeamDialogComponent
+    JoinTeamDialogComponent,
+    TeamDialogComponent,
+    CreateTeamDialogComponent,
+    ResolveChallangeDialogComponent
   ],
   exports: [
     TeamsLedderPageComponent

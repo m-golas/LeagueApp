@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>Zaproszenie</h1>
+<div mat-dialog-content class="holder">
+  <form class="form" [formGroup]="challangeForm">
+    <mat-form-field class="full-width">
+      <mat-label>Wynik twojego zespołu</mat-label>
+      <input type="number" matInput formControlName="challengerScore" />
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+        <mat-label>Wynik przeciwnego zespołu</mat-label>
+        <input type="number" matInput formControlName="challengedScore" />
+      </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button
+    class="action-button"
+    mat-raised-button
+    mat-dialog-close
+    color="primary"
+    [mat-dialog-close]="getData()"
+    [disabled]="!this.challangeForm.valid"
+  >
+    Wprowadź wynik
+  </button>
+</div>

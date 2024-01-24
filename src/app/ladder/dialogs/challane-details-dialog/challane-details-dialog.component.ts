@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Challange } from 'src/app/core/_models/challange';
+import { Challange, ChallangeFull } from 'src/app/core/_models/challange';
 
 @Component({
   selector: 'app-challane-details-dialog',
@@ -8,8 +8,15 @@ import { Challange } from 'src/app/core/_models/challange';
   styleUrls: ['./challane-details-dialog.component.scss'],
 })
 export class ChallaneDetailsDialogComponent {
+  sportName: Record<string, string> = {
+    DRAW: 'Remis',
+    CHALLENGER_WON: 'Wygrana wyzywającego',
+    CHALLANGER_LOSE: 'Wygrana wyzwanego',
+  };
+
+
   constructor(
     public dialogRef: MatDialogRef<ChallaneDetailsDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Challange
+    @Inject(MAT_DIALOG_DATA) public data: ChallangeFull
   ) {}
 }

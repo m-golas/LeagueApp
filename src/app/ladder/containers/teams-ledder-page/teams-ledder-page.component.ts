@@ -1,21 +1,22 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { BehaviorSubject, Observable, filter, map, tap } from 'rxjs';
-import { Challange } from 'src/app/core/_models/challange';
+import { BehaviorSubject, Observable, first, map, of } from 'rxjs';
+import { Challange, ChallangeFull } from 'src/app/core/_models/challange';
 import { Player } from 'src/app/core/_models/player';
 import { Team } from 'src/app/core/_models/team';
-import { TeamWithMembers } from 'src/app/core/_models/team-with-members';
-import { AuthService } from 'src/app/core/_services/auth.service';
 import { ChallangeService } from 'src/app/core/_services/challange.service';
-import { PlayerTeamService } from 'src/app/core/_services/player-team.service';
-import { PlayerService } from 'src/app/core/_services/player.service';
 import { TeamsService } from 'src/app/core/_services/team.service';
 import { ChallangeDialogComponent } from '../../dialogs/challange-dialog/challange-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationDialogComponent } from '../../dialogs/invitation-dialog/invitation-dialog.component';
 import { ChallaneDetailsDialogComponent } from '../../dialogs/challane-details-dialog/challane-details-dialog.component';
-import { SportContextService } from 'src/app/core/_services/sport-context.service';
 import { JoinTeamDialogComponent } from '../../dialogs/join-team-dialog/join-team-dialog.component';
+import { ProfileService } from 'src/app/core/_services/profile.service';
+import { TeamDialogComponent } from '../../dialogs/team-dialog/team-dialog.component';
+import { TeamBase } from 'src/app/core/_models/team-base';
+import { CreateTeamDialogComponent } from '../../dialogs/create-team-dialog/create-team-dialog.component';
+import { SportContextService } from 'src/app/core/_services/sport-context.service';
+import { ResolveChallangeDialogComponent } from '../../dialogs/resolve-challange-dialog/resolve-challange-dialog.component';
 
 @Component({
   selector: 'app-teams-ledder',
@@ -23,64 +24,32 @@ import { JoinTeamDialogComponent } from '../../dialogs/join-team-dialog/join-tea
   styleUrls: ['./teams-ledder-page.component.scss'],
 })
 export class TeamsLedderPageComponent {
-  teams$: BehaviorSubject<Array<Team>>;
   players$: BehaviorSubject<Array<Player>>;
   challanges$: BehaviorSubject<Array<Challange>>;
-  playerTeam$: BehaviorSubject<TeamWithMembers | null>;
-  isOwner$: Observable<boolean | undefined>;
-  hasTeam$: Observable<boolean | undefined>;
 
-  contextSubscription$;
+  playerTeam$: Observable<Team | null>;
+  isOwner$: Observable<boolean>;
+  hasTeam$: Observable<boolean>;
 
   selectedSection = 'teams';
-  currentUser = this.auth.currentUser;
+  currentUser = this.profileService.profile;
 
   constructor(
+    private profileService: ProfileService,
     private teamService: TeamsService,
     private challangeService: ChallangeService,
-    private playerService: PlayerService,
-    private playerTeamService: PlayerTeamService,
-    private auth: AuthService,
     public dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private sport: SportContextService
+    private context: SportContextService
   ) {
-    this.teams$ = new BehaviorSubject<Array<Team>>([]);
     this.players$ = new BehaviorSubject<Array<Player>>([]);
     this.challanges$ = new BehaviorSubject<Array<Challange>>([]);
-    this.playerTeam$ = new BehaviorSubject(null as TeamWithMembers | null);
+    this.playerTeam$ = this.teamService.getPlayerTeam();
 
-    this.contextSubscription$ = this.sport
-      .getSportContextObservable()
-      .pipe(
-        tap((value) => {
-          console.log(value);
-          this.fetchData();
-        })
-      )
-      .subscribe();
-
-    this.isOwner$ = this.playerTeam$
-      .asObservable()
-      .pipe(map((team) => team?.isOwner));
-
-    this.hasTeam$ = this.playerTeam$
-    .asObservable().pipe(map(team => !!team))
-  }
-
-  ngOnInit() {
-    this.fetchData();
-  }
-
-  ngOnDestroy() {
-    this.contextSubscription$.unsubscribe();
-  }
-
-  fetchData() {
-    this.getAllTeams();
-    this.getAllPlayers();
-    this.getPlayerTeam();
-    this.getAllChallanges();
+    this.isOwner$ = this.teamService.isOwner();
+    this.hasTeam$ = this.teamService
+      .getPlayerTeam()
+      .pipe(map((team) => !!team));
   }
 
   changeSelection(selection: string) {
@@ -89,75 +58,85 @@ export class TeamsLedderPageComponent {
     }
   }
 
-  getAllChallanges(): void {
-    this.challangeService
-      .getChallanges()
-      .pipe(
-        map((challanges) =>
-          challanges.sort(
-            (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
-          )
-        )
-      )
-      .subscribe((challanges) => {
-        this.challanges$.next(challanges);
+  openInvitation(id: number): void {
+    this.teamService.getInvitationCode(id).subscribe((code) => {
+      console.log('Code', code);
+      this.dialog.open(InvitationDialogComponent, {
+        data: { code: code.code },
       });
-  }
-
-  getAllTeams(): void {
-    this.teamService.getAllTeams().subscribe((teams) => {
-      this.teams$.next(teams);
-    });
-  }
-
-  getAllPlayers(): void {
-    this.playerService.getAllPlayers().subscribe((players) => {
-      this.players$.next(players);
-    });
-  }
-
-  getPlayerTeam(): void {
-    this.playerTeamService.getTeam().subscribe((team) => {
-      this.playerTeam$.next(team);
-    });
-  }
-
-  openInvitation(code: string): void {
-    this.dialog.open(InvitationDialogComponent, {
-      data: { code },
     });
   }
 
   openJoinTeam(): void {
     const dialogRef = this.dialog.open(JoinTeamDialogComponent, {
-      data: "Join",
+      data: 'Join',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('Result', result)
-    })
+      this.teamService
+        .joinTeam(result.code)
+        .pipe(first())
+        .subscribe((res) => {
+          this.openResultSnack(
+            !!res,
+            'Pomyślnie dołączono do zespołu',
+            'Nie udało się dołączyć do zespołu. Spróbuj ponownie później!'
+          );
+
+          this.profileService
+            .getProfile()
+            .pipe(first())
+            .subscribe(() => this.context.reload());
+        });
+    });
+  }
+
+  openCreateTeam(): void {
+    const dialogRef = this.dialog.open(CreateTeamDialogComponent, {
+      data: 'Create',
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(first())
+      .subscribe((result) => {
+        this.teamService
+          .createTeam(result.name)
+          .pipe(first())
+          .subscribe((res) => {
+            this.openResultSnack(
+              !!res,
+              'Pomyślnie utworzono zespół',
+              'Nie udało się utowrzyć zespołu. Spróbuj ponownie później!'
+            );
+
+            this.profileService
+              .getProfile()
+              .pipe(first())
+              .subscribe(() => this.context.reload());
+          });
+      });
   }
 
   acceptChalange(id: Challange['id']) {
     this.challangeService.acceptChallange(id).subscribe((res) => {
       this.openResultSnack(
-        res,
+        !!res,
         'Pomyślnie akceptowano wyzwanie',
         'Nie udało się akceptować wyzwania. Spróbuj ponownie później!'
       );
-      this.getAllChallanges();
+      this.context.reload();
     });
   }
 
   declineChalange(id: Challange['id']) {
     this.challangeService.declineChallange(id).subscribe((res) => {
       this.openResultSnack(
-        res,
+        !!res,
         'Pomyślnie odrzucono wyzwanie',
         'Nie udało się odrzucić wyzwania. Spróbuj ponownie później!'
       );
-
-      this.getAllChallanges();
+      this.context.reload();
     });
   }
 
@@ -168,20 +147,32 @@ export class TeamsLedderPageComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.challangeService.challangeTeam(result).subscribe((result) => {
-          this.openResultSnack(
-            result,
-            'Pomyślnie wyzwano zespół',
-            'Nie udało się wyzwać zespołu. Spróbuj ponownie później!'
-          );
-        });
+        this.challangeService
+          .challangeTeam(result)
+          .pipe(first())
+          .subscribe((result) => {
+            this.openResultSnack(
+              !!result,
+              'Pomyślnie wyzwano zespół',
+              'Nie udało się wyzwać zespołu. Spróbuj ponownie później!'
+            );
+          });
       }
     });
   }
 
-  showChallangeDialog(challange: Challange): void {
-    console.log(challange);
+  showTeamDialog(team: TeamBase) {
+    this.teamService
+      .getTeam(team.id)
+      .pipe(first())
+      .subscribe((team) => {
+        this.dialog.open(TeamDialogComponent, {
+          data: { ...team },
+        });
+      });
+  }
 
+  showChallangeDialog(challange: Challange): void {
     this.dialog.open(ChallaneDetailsDialogComponent, {
       data: { ...challange },
     });
@@ -198,7 +189,24 @@ export class TeamsLedderPageComponent {
     });
   }
 
-  resolveChallange(challange: Challange) {
-    console.log('Challange', challange);
+  resolveChallange(challange: ChallangeFull) {
+    const dialogRef = this.dialog.open(ResolveChallangeDialogComponent, {
+      data: { ...challange },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(result);
+
+      const {id, result: { challengedScore, challengerScore } } = result
+
+      this.challangeService.resolveChallange(id, challengerScore, challengedScore).pipe(first()).subscribe(result => {
+        this.openResultSnack(
+          !!result,
+          'Pomyślnie wprowadzono wynik',
+          'Nie udało się wprowadzić wyniku. Spróbuj ponownie później!'
+        );
+        this.context.reload();
+      })
+    });
   }
 }

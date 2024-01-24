@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Player } from 'src/app/core/_models/player';
+import { Members } from 'src/app/core/_models/team';
 
 @Component({
   selector: 'app-team-members-list',
@@ -7,8 +7,8 @@ import { Player } from 'src/app/core/_models/player';
   styleUrls: ['./team-members-list.component.scss']
 })
 export class TeamMembersListComponent {
-  @Input() members: Array<Player> = []
-  @Input() isOwner: boolean = false;
+  @Input() members: Array<Members> = []
+  @Input() isOwner: boolean | null = false;
   @Output() invite = new EventEmitter()
 
   openInvitation(): void {

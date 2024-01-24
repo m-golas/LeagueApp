@@ -1,25 +1,41 @@
-import { Team } from "./team";
-type ChallangeBaseTypes =  "PENDING" | "ACCEPTED" | "AWAITING_SCORE"
+import { SportType } from './sport-type';
+import { Team } from './team';
+type ChallangeBaseTypes = 'REQUESTED' | 'REJECTED' | 'IN_PROGRESS';
 
 type ChallangeBase = {
-    id: string;
-    type: ChallangeBaseTypes
-    challanger: Team;
-    challangedTeam: Team;
-    time: string;
-    comment?: string
-}
+  id: number;
+  name: string | null;
+  status: ChallangeBaseTypes;
+  challenger: number;
+  challenged: number;
+  matchTime: string;
+  result?: Score | null;
+};
 
-export type Challange = ChallangeResolved | ChallangeBase
+export type ChallangeFull = {
+  id: 1;
+  location: string;
+  comment: string;
+  status: ChallangeBaseTypes;
+  matchTime: string;
+  challengedAt: string;
+  type: SportType;
+  challenger: Team;
+  challenged: Team;
+  result: Score | null;
+};
 
-export type ChallangeTypes = Challange["type"]
+export type Challange = ChallangeResolved | ChallangeBase;
 
- type Score = {
-    winner: Team
-    score: string
-}
+export type ChallangeTypes = Challange['status'];
 
-type ChallangeResolved = Omit<ChallangeBase, "type"> & {
-    type: "RESOLVED"
-    score: Score
-}
+type Score = {
+  status: string
+  challengedScore: number;
+  challengerScore: number;
+};
+
+type ChallangeResolved = Omit<ChallangeBase, 'status'> & {
+  status: 'FINISHED';
+  score: Score;
+};

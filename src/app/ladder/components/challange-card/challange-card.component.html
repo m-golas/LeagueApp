@@ -1,7 +1,7 @@
-<ng-container *ngIf="challange">
+<ng-container *ngIf="challange | async as challange ">
   <mat-list-item class="menu">
-    <div matListItemTitle>{{ challange.challanger.name }}</div>
-    <div matListItemLine>{{ challange.time | date : "dd.MM.yyyy HH.mm" }}</div>
+    <div matListItemTitle>{{ challange.challenger.name }}</div>
+    <div matListItemLine>{{ challange?.matchTime | date : "dd.MM.yyyy HH.mm" }}</div>
 
     <button
       class="menu__button"

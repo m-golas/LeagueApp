@@ -1,10 +1,17 @@
 
 <h1 mat-dialog-title>Wyzwanie</h1>
 <div mat-dialog-content class="holder">
-    <p><strong>Zespół wyzywający: {{data.challanger.name}}</strong></p>
-    <p>Zespół wyzwany: {{data.challangedTeam.name}}</p>
-    <p>Data: {{data.time | date : "dd.MM.yyyy HH.mm" }}</p>
+    <p><strong>Zespół wyzywający: {{data.challenger.name}}</strong></p>
+    <p>Zespół wyzwany: {{data.challenged.name}}</p>
+    <p>Data: {{data.matchTime | date : "dd.MM.yyyy HH.mm" }}</p>
     <p *ngIf="data.comment">Komentarz: {{data.comment}}</p>
+
+    <ng-container *ngIf="data.result">
+      <h3><strong>Wyniki</strong></h3>
+      <!-- <p> Status: {{data.result.status}}</p> -->
+      <p> Wynik wyzwanego zespołu: {{data.result.challengedScore}}
+      <p> Wynik wyzywającego zespołu: {{data.result.challengerScore}}</p>
+    </ng-container>
 </div>
 <div mat-dialog-actions>
   <button mat-button mat-dialog-close>Zamknij</button>

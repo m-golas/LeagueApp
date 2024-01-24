@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>Drużyna</h1>
+<div mat-dialog-content class="holder">
+  <p>
+    <strong>Zespół: {{ data.name }}</strong>
+  </p>
+  <p>Ranking: {{ data.rank }}</p>
+  <p>Punkty: {{ data.points }}</p>
+
+  <app-team-members-list [members]="data.members" [isOwner]="false" />
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close  class="action-button">Zamknij</button>
+</div>

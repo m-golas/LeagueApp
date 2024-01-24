@@ -6,7 +6,7 @@
 
     <mat-list *ngIf="challanges; else noChallange">
       <app-challange-card
-        *ngFor="let item of challanges | slice : 0 : 3"
+        *ngFor="let item of matches$ | slice : 0 : 3"
         [challange]="item"
         (acceptChallange)="accept($event)"
         (declineChallange)="decline($event)"

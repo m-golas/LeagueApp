@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
+import { SportType } from 'src/app/core/_models/sport-type';
 import { AuthService } from 'src/app/core/_services/auth.service';
 import {
   SportContextService,
-  SportType,
 } from 'src/app/core/_services/sport-context.service';
 
 @Component({

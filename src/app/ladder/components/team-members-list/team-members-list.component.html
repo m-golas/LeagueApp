@@ -5,9 +5,9 @@
     </mat-expansion-panel-header>
 
     <mat-list role="list">
-      <mat-list-item *ngFor="let item of members" role="listitem">{{
-        item.name
-      }}</mat-list-item>
+      <mat-list-item *ngFor="let item of members" role="listitem"
+        >{{ item.firstname }} {{ item.lastname }}</mat-list-item
+      >
       <mat-list-item role="listitem" *ngIf="isOwner">
         <button
           mat-stroked-button
