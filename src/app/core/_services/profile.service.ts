@@ -25,7 +25,6 @@ export class ProfileService {
   getProfile(): Observable<Profile> {
     return this.http.get<Profile>(`${environment.baseUrl}/profile`).pipe(
       tap((profile) => {
-        console.log('profile', profile);
         this.currentUser.next(profile);
       })
     );

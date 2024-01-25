@@ -15,16 +15,18 @@ export class ResolveChallangeDialogComponent {
   ) {}
 
   challangeForm: FormGroup = new FormGroup({
-    challengerScore: new FormControl(0, Validators.required),
-    challengedScore: new FormControl(0, Validators.required),
+    yourScore: new FormControl(0, Validators.required),
+    enemyScore: new FormControl(0, Validators.required),
   });
 
   getData() {
     return {
       id: this.data.id,
+      challengerID: this.data.challenger.id,
+      challengedID: this.data.challenged.id,
       result: {
-        challengerScore: this.challangeForm.value["challengerScore"],
-        challengedScore: this.challangeForm.value["challengedScore"]
+        yourScore: this.challangeForm.value["yourScore"],
+        enemyScore: this.challangeForm.value["enemyScore"]
       },
     };
   }

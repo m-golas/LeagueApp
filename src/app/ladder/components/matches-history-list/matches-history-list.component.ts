@@ -14,7 +14,7 @@ import { SportContextService } from 'src/app/core/_services/sport-context.servic
 @Component({
   selector: 'app-matches-history-list',
   templateUrl: './matches-history-list.component.html',
-  styleUrls: ['./matches-history-list.component.scss']
+  styleUrls: ['./matches-history-list.component.scss'],
 })
 export class MatchesHistoryListComponent {
   @Output() showChallange = new EventEmitter<Challange>();
@@ -54,8 +54,9 @@ export class MatchesHistoryListComponent {
           if (data) {
             this.totalElements = data['totalElements'];
             this.dataSource = new MatTableDataSource(data['content']);
-          console.log('Data', data['content'])
-
+          } else {
+            this.totalElements = 0;
+            this.dataSource = new MatTableDataSource([] as ChallangeFull[]);
           }
         },
         (error) => {
@@ -70,7 +71,6 @@ export class MatchesHistoryListComponent {
       size: event.pageSize,
     });
   }
-
 
   show(challange: Challange) {
     this.showChallange.emit(challange);

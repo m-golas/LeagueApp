@@ -43,7 +43,7 @@
     <button mat-menu-item (click)="show(element)">
       <span>Podgląd</span>
     </button>
-    <ng-container *ngIf=" isOwner && tookPlace(element)">
+    <ng-container *ngIf=" isOwner">
       <button mat-menu-item (click)="resolve(element)">
         <span>Wprowadź wynik</span>
       </button>

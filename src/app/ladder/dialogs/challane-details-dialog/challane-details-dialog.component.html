@@ -4,6 +4,7 @@
     <p><strong>Zespół wyzywający: {{data.challenger.name}}</strong></p>
     <p>Zespół wyzwany: {{data.challenged.name}}</p>
     <p>Data: {{data.matchTime | date : "dd.MM.yyyy HH.mm" }}</p>
+    <p>Lokalizacja: {{data.location}}</p>
     <p *ngIf="data.comment">Komentarz: {{data.comment}}</p>
 
     <ng-container *ngIf="data.result">

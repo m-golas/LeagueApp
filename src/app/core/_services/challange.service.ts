@@ -28,7 +28,6 @@ export class ChallangeService {
                 },
               })
               .pipe(
-                tap((test) => console.log('before map', test)),
                 map((matches) => {
                   const challangedTeams = matches.content.map((challange) =>
                     this.getChallange(challange.id)
@@ -63,8 +62,6 @@ export class ChallangeService {
   }
 
   challangeTeam(challange: ChallangeRequest) {
-    console.log('Challanged team', challange);
-
     return this.team.getPlayerTeam().pipe(
       first(),
       switchMap((team) => {
