@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'http://localhost:8443/api/v1',
+  baseUrl: 'http://docker-guard.pl/api/v1',
 };
 
 /*
