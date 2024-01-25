@@ -55,12 +55,12 @@ export class AwaitingScoringChallangesListComponent {
       .pipe(first())
       .subscribe(
         (data) => {
-
-          console.log('data', data)
           if (data) {
             this.totalElements = data['totalElements'];
             this.dataSource = new MatTableDataSource(data['content']);
-            console.log('Data', data['content']);
+          } else {
+            this.totalElements = 0;
+            this.dataSource = new MatTableDataSource([] as ChallangeFull[]);
           }
         },
         (error) => {

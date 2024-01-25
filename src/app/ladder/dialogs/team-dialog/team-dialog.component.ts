@@ -11,7 +11,5 @@ export class TeamDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<TeamDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Team
-  ) {
-    console.log(data)
-  }
+  ) {}
 }

@@ -37,7 +37,6 @@ export class IncomingMatchesListComponent {
       .getSportContextObservable()
       .pipe(
         tap((_) => {
-          console.log('Reaload')
           this.getActiveMatches({ page: 0, size: 10 });
           if (this.paginator) this.paginator.pageIndex = 0;
         })
@@ -58,8 +57,9 @@ export class IncomingMatchesListComponent {
           if (data) {
             this.totalElements = data['totalElements'];
             this.dataSource = new MatTableDataSource(data['content']);
-          console.log('Data', data['content'])
-
+          } else {
+            this.totalElements = 0;
+            this.dataSource = new MatTableDataSource([] as ChallangeFull[]);
           }
         },
         (error) => {

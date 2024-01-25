@@ -14,13 +14,13 @@ import { SportContextService } from 'src/app/core/_services/sport-context.servic
 @Component({
   selector: 'app-pending-challanges-list',
   templateUrl: './pending-challanges-list.component.html',
-  styleUrls: ['./pending-challanges-list.component.scss']
+  styleUrls: ['./pending-challanges-list.component.scss'],
 })
 export class PendingChallangesListComponent {
   @Input() pendingChallanges: Array<Challange> | null = [];
 
-  @Output() acceptChallange = new EventEmitter<Challange["id"]>();
-  @Output() declineChallange = new EventEmitter<Challange["id"]>();
+  @Output() acceptChallange = new EventEmitter<Challange['id']>();
+  @Output() declineChallange = new EventEmitter<Challange['id']>();
   @Output() showChallange = new EventEmitter<Challange>();
 
   totalElements: number = 0;
@@ -39,7 +39,6 @@ export class PendingChallangesListComponent {
       .getSportContextObservable()
       .pipe(
         tap((_) => {
-          console.log('reload')
           this.getActiveMatches({ page: 0, size: 10 });
           if (this.paginator) this.paginator.pageIndex = 0;
         })
@@ -57,12 +56,12 @@ export class PendingChallangesListComponent {
       .pipe(first())
       .subscribe(
         (data) => {
-          console.log('Data', data)
-
           if (data) {
             this.totalElements = data['totalElements'];
             this.dataSource = new MatTableDataSource(data['content']);
-
+          } else {
+            this.totalElements = 0;
+            this.dataSource = new MatTableDataSource([] as ChallangeFull[]);
           }
         },
         (error) => {
@@ -78,15 +77,15 @@ export class PendingChallangesListComponent {
     });
   }
 
-  accept(id: Challange["id"]) {
+  accept(id: Challange['id']) {
     this.acceptChallange.emit(id);
   }
 
-  decline(id: Challange["id"]) {
+  decline(id: Challange['id']) {
     this.declineChallange.emit(id);
   }
 
   show(challange: Challange) {
-    this.showChallange.emit(challange)
+    this.showChallange.emit(challange);
   }
 }

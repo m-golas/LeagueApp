@@ -64,7 +64,6 @@ export class TeamsService {
           mergeMap((profile) => profile?.teams || []),
           filter((team) => team.type === type),
           map((team) => team?.owner === 'OWNER'),
-          tap((team) => console.log('Team', team)),
           first()
         );
       })
@@ -75,8 +74,9 @@ export class TeamsService {
     return this.context.getSportContextObservable().pipe(
       switchMap((type) => {
         return this.profile.asObservable().pipe(
-          mergeMap((profile) => profile?.teams || []),
-          map((team) => (team.type === type ? team.id : null)),
+          map((profile) => profile?.teams || []),
+          map((team) => team.find((team) => team.type === type)),
+          map((team) => team?.id),
           exhaustMap((id) => {
             return (id && this.getTeam(id)) || of(null);
           })

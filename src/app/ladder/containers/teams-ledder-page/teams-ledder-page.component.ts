@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { BehaviorSubject, Observable, first, map, of } from 'rxjs';
+import { BehaviorSubject, Observable, first, map, mergeMap, of, tap } from 'rxjs';
 import { Challange, ChallangeFull } from 'src/app/core/_models/challange';
 import { Player } from 'src/app/core/_models/player';
 import { Team } from 'src/app/core/_models/team';
@@ -60,7 +60,6 @@ export class TeamsLedderPageComponent {
 
   openInvitation(id: number): void {
     this.teamService.getInvitationCode(id).subscribe((code) => {
-      console.log('Code', code);
       this.dialog.open(InvitationDialogComponent, {
         data: { code: code.code },
       });
@@ -146,6 +145,8 @@ export class TeamsLedderPageComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
+      console.log('Challange Result', result);
+
       if (result) {
         this.challangeService
           .challangeTeam(result)
@@ -195,18 +196,42 @@ export class TeamsLedderPageComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
+      const {
+        id,
+        challengerID,
+        challengedID,
+        result: { yourScore, enemyScore },
+      } = result;
 
-      const {id, result: { challengedScore, challengerScore } } = result
+      this.teamService
+        .getPlayerTeam()
+        .pipe(
+          first(),
+          mergeMap((team) => {
+            if (team) {
+              const challengerScore =
+                team.id === challengerID ? yourScore : enemyScore;
+              const challengedScore =
+                team.id === challengedID ? yourScore : enemyScore;
 
-      this.challangeService.resolveChallange(id, challengerScore, challengedScore).pipe(first()).subscribe(result => {
-        this.openResultSnack(
-          !!result,
-          'Pomyślnie wprowadzono wynik',
-          'Nie udało się wprowadzić wyniku. Spróbuj ponownie później!'
-        );
-        this.context.reload();
-      })
+              return this.challangeService
+                .resolveChallange(id, challengerScore, challengedScore)
+                .pipe(
+                  first(),
+                );
+            }
+
+            return of(false);
+          })
+        )
+        .subscribe((res) => {
+          this.openResultSnack(
+            !!res,
+            'Pomyślnie wprowadzono wynik',
+            'Nie udało się wprowadzić wyniku. Spróbuj ponownie później!'
+          );
+          this.context.reload();
+        });
     });
   }
 }
