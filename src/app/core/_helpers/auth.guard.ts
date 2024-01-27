@@ -13,8 +13,6 @@ export class AuthGuard extends KeycloakAuthGuard {
     protected readonly keycloak: KeycloakService
   ) {
     super(router, keycloak);
-
-    keycloak.getToken().then(token => console.log('Token', token))
   }
   
   async isAccessAllowed(
